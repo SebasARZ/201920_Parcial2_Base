@@ -1,9 +1,17 @@
 ﻿using AI;
-
-public class IsActorTagged : Selector
+using UnityEngine;
+public class IsActorTagged : SelectWithOption
 {
-    protected override bool Check()
+    [SerializeField] private PlayerController playerController;
+    public override bool Check()
     {
-        throw new System.NotImplementedException();
+        return playerController.IsTagged;
+    }
+    private void Awake()
+    {
+        if(playerController == null)
+        {
+            playerController = GetComponent<PlayerController>();
+        }
     }
 }

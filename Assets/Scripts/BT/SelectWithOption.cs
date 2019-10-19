@@ -5,10 +5,10 @@ namespace AI
     public abstract class SelectWithOption : Node
     {
         [SerializeField]
-        private Group successTree;
+        private Node successTree;
 
         [SerializeField]
-        private Group failTree;
+        private Node failTree;
 
         public abstract bool Check();
 

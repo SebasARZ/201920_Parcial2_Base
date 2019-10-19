@@ -1,11 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class HumanController : PlayerController
 {
     [SerializeField]
     private LayerMask walkable;
 
-    protected override Vector3 GetLocation()
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            GoToLocation(GetLocation());
+        }
+    }
+
+    public override Vector3 GetLocation()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;

@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Collider))]
+
 public abstract class PlayerController : MonoBehaviour
 {
     [SerializeField]
@@ -11,12 +13,11 @@ public abstract class PlayerController : MonoBehaviour
 
     protected NavMeshAgent agent { get; set; }
 
-    public bool IsTagged { get; protected set; }
+    public bool IsTagged { get;  set; }
 
     public void SwitchRoles()
     {
         IsTagged = !IsTagged;
-
         // Pause all logic and restart after
     }
 
@@ -28,15 +29,16 @@ public abstract class PlayerController : MonoBehaviour
     public virtual IEnumerator StopLogic()
     {
         // Stop BT runner if AI player, else stop movement.
+        agent.isStopped = true;
 
         yield return new WaitForSeconds(stopTime);
-        
+
+        agent.isStopped = false;
         // Restart stuff.
     }
 
-    protected abstract Vector3 GetLocation();
+    public abstract Vector3 GetLocation();
 
-    // Start is called before the first frame update
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -48,7 +50,9 @@ public abstract class PlayerController : MonoBehaviour
 
         if (IsTagged)
         {
-            StopLogic(); 
+            Debug.Log($"{name} {IsTagged}");
+            StartCoroutine(StopLogic());
+            GameController.Instance.OnPlayerStateChange(name);
         }
     }
 }

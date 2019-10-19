@@ -1,9 +1,46 @@
-﻿using AI;
+﻿using System;
+using System.Collections.Generic;
+using AI;
+using UnityEngine;
 
-public class IsTaggedActorNear : Selector
+public class IsTaggedActorNear : SelectWithOption
 {
-    protected override bool Check()
+    private List<PlayerController> playersNear = new List<PlayerController>();
+    private Transform tagActor;
+
+
+    public Transform TagActor {
+        get { return tagActor; }
+    }
+    public override bool Check()
     {
-        throw new System.NotImplementedException();
+        for (int i = 0; i < playersNear.Count; i++)
+        {
+            var currentPlayer = playersNear[i];
+            if (currentPlayer.IsTagged)
+            {
+                tagActor = currentPlayer.transform;
+                Debug.Log("Enemigo Cerca");
+                return true;
+                
+            }
+        }
+
+        return false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playersNear.Add(other.GetComponent<PlayerController>());
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playersNear.Remove(other.GetComponent<PlayerController>());
+        }
     }
 }
